@@ -7,6 +7,7 @@ import urllib.parse
 import requests
 import psutil
 import time
+import csv
 
 user_API_key = "5N5KQVAFEADQ22VA"
 nombreCanal = "Mi Canal"
@@ -92,6 +93,16 @@ def leerCanal(idCanal, API_key):
         # guardar datos del canal
     else:
         print("Error al obtener datos del canal")
+
+#guardar los datos en un csv
+def guardarDatos(feeds):
+    print("Guardando datos en un csv")
+    with open('MiCanal.csv', 'wb') as csvfile:
+        filewriter = csv.writer(csvfile, delimeter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
+        filewriter.writerow(['Timestamp', 'CPU', 'RAM'])
+        for i in range(len(feeds)):
+            filewriter.writerow([])# falta saber la cabecera de timestamp
+
 
 if __name__ == "__main__":
     #print(crearCanal(user_API_key))
