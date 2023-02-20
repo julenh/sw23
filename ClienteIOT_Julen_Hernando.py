@@ -50,6 +50,33 @@ def crearCanal(user_API_key):
         return datosCanal
     else:
         print("se ha producido un error al crear el canal")
+        return ""
+
+def subirDatos(api_key):
+    print("subida de datos")
+    cpu, ram = cpu_ram()
+    metodo = 'POST'
+    uri = "https://api.thingspeak.com/update.json"
+    cabeceras = {'Host': 'api.thingspeak.com',
+                 'Content-Type': 'application/x-www-form-urlencoded'}
+    cuerpo = {'api_key': api_key, 'fiel1': cpu, 'field2': ram}
+    cuerpo_encoded = urllib.parse.urlencode(cuerpo)
+    cabeceras['Content-Length'] = str(len(cuerpo_encoded))
+    miRequest(cabeceras, cuerpo, metodo, uri)
+
+def comprobarCanales():
+    print("comprobando que canales existen")
+    metodo = 'GET'
+    uri = "https://api.thingspeak.com/channels.json"
+    cabeceras = {'Host': 'api.thingspeak.com',
+                 'Content-Type': 'application/x-www-form-urlencoded'}
+    cuerpo = {'api_keyt': user_API_key}
+    codigo, respuesta = miRequest(cabeceras, cuerpo, metodo, uri)
+    contenido = respuesta.content
+    return json.loads(contenido)
+
+#def leerCanal():
+
 if __name__ == "__main__":
     print(crearCanal(user_API_key))
     #cpu_ram()
