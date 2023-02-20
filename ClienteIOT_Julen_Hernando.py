@@ -11,7 +11,7 @@ import time
 user_API_key = "5N5KQVAFEADQ22VA"
 nombreCanal = "Mi Canal"
 idCanal = ""
-write_API_key = "YPIWPJK1HX135LJW"
+API_key = "YPIWPJK1HX135LJW"
 datosCanal = {}
 #Lectura de CPU y RAM
 def cpu_ram():
@@ -75,11 +75,28 @@ def comprobarCanales():
     contenido = respuesta.content
     return json.loads(contenido)
 
-#def leerCanal():
+def leerCanal(idCanal, API_key):
+    print("Obteniendo datos del canal")
+    metodo = 'GET'
+    uri = "https://api.thingspeak.com/channels/"+ str(idCanal) + "/feeds.json"
+    cabeceras = {'Host': 'api.thingspeak.com',
+                 'Content-Type': 'application/x-www-form-urlencoded'}
+    cuerpo = {'api_key': API_key}
+    cuerpo_encoded = urllib.parse.urlencode(cuerpo)
+    cabeceras['Content-Length'] = str(len(cuerpo_encoded))
+    codigo, respuesta = miRequest(cabeceras, cuerpo, metodo, uri)
+    if (codigo == 200):
+        print("Acceso correcto")
+        contenido = respuesta.content
+        datosCanal = json.loads(contenido)
+        # guardar datos del canal
+    else:
+        print("Error al obtener datos del canal")
 
 if __name__ == "__main__":
-    print(crearCanal(user_API_key))
+    #print(crearCanal(user_API_key))
     #cpu_ram()
-   # while True:
+    while True:
+        subirDatos("R5JNSRLBTLDNLL3N")
     #    print(cpu_ram())
-     #   time.sleep(5)
+        time.sleep(5)
