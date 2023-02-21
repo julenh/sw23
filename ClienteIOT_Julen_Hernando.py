@@ -99,7 +99,7 @@ def leerCanal(idCanal, API_key):
 def guardarDatos(feeds):
     print("Guardando datos en un csv")
     with open('MiCanal.csv', 'wb') as csvfile:
-        filewriter = csv.writer(csvfile, delimeter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
+        filewriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
         filewriter.writerow(['Timestamp', 'CPU', 'RAM'])
         for i in range(len(feeds)):
             filewriter.writerow([feeds[i]['created_at'], feeds[i]['field1'], feeds[i]['field2']])
