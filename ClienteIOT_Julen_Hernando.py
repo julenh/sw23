@@ -60,7 +60,7 @@ def subirDatos(api_key):
     uri = "https://api.thingspeak.com/update.json"
     cabeceras = {'Host': 'api.thingspeak.com',
                  'Content-Type': 'application/x-www-form-urlencoded'}
-    cuerpo = {'api_key': api_key, 'fiel1': cpu, 'field2': ram}
+    cuerpo = {'api_key': api_key, 'field1': cpu, 'field2': ram}
     cuerpo_encoded = urllib.parse.urlencode(cuerpo)
     cabeceras['Content-Length'] = str(len(cuerpo_encoded))
     miRequest(cabeceras, cuerpo, metodo, uri)
@@ -91,6 +91,7 @@ def leerCanal(idCanal, API_key):
         contenido = respuesta.content
         datosCanal = json.loads(contenido)
         # guardar datos del canal
+        guardarDatos(datosCanal["feeds"])
     else:
         print("Error al obtener datos del canal")
 
@@ -101,12 +102,13 @@ def guardarDatos(feeds):
         filewriter = csv.writer(csvfile, delimeter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
         filewriter.writerow(['Timestamp', 'CPU', 'RAM'])
         for i in range(len(feeds)):
-            filewriter.writerow([])# falta saber la cabecera de timestamp
+            filewriter.writerow([feeds[i]['created_at'], feeds[i]['field1'], feeds[i]['field2']])
 
 
 if __name__ == "__main__":
     #print(crearCanal(user_API_key))
     #cpu_ram()
+    leerCanal("2037008", "HPNS4GGMJOR7EFCR")
     while True:
         subirDatos("R5JNSRLBTLDNLL3N")
     #    print(cpu_ram())
