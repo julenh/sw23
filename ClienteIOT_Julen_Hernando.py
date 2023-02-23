@@ -12,7 +12,7 @@ import csv
 user_API_key = "5N5KQVAFEADQ22VA"
 nombreCanal = "Mi Canal"
 idCanal = ""
-API_key = "YPIWPJK1HX135LJW"
+API_key = "HPNS4GGMJOR7EFCR"
 datosCanal = {}
 #Lectura de CPU y RAM
 def cpu_ram():
@@ -98,18 +98,36 @@ def leerCanal(idCanal, API_key):
 #guardar los datos en un csv
 def guardarDatos(feeds):
     print("Guardando datos en un csv")
-    with open('MiCanal.csv', 'wb') as csvfile:
-        filewriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
-        filewriter.writerow(['Timestamp', 'CPU', 'RAM'])
-        for i in range(len(feeds)):
-            filewriter.writerow([feeds[i]['created_at'], feeds[i]['field1'], feeds[i]['field2']])
+    with open('MiCanal.csv', 'w', newline='') as csvfile:
+        field_names = ['timestamp', 'cpu', 'ram']
+        filewriter = csv.DictWriter(csvfile, fieldnames=field_names, delimiter=';')
+        #filewriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
+        #filewriter.writerow(['Timestamp', 'CPU', 'RAM'])
+        for i in feeds:
+            row = {'timestamp': i['created_at'],
+                   'cpu': i['field1'],
+                   'ram': i['field2']}
+            filewriter.writerow(row)
+
+# Vaciar los datos del canal (con user_API_key)
+def vaciarCanal(idCanal, API_key):
+    print("Vaciar datos del canal")
+    metodo = 'DELETE'
+    uri = "https://api.thingspeak.com/channels/"+str(idCanal)+"/feeds.json"
+    cabeceras = {'Host': 'api.thingspeak.com',
+                 'Content-Type': 'application/x-www-form-urlencoded'}
+    cuerpo = {'api_key': API_key}
+    cuerpo_encoded = urllib.parse.urlencode(cuerpo)
+    cabeceras['Content-Length'] = str(len(cuerpo_encoded))
+    miRequest(cabeceras, cuerpo, metodo, uri)
 
 
 if __name__ == "__main__":
     #print(crearCanal(user_API_key))
     #cpu_ram()
-    leerCanal("2037008", "HPNS4GGMJOR7EFCR")
-    while True:
-        subirDatos("R5JNSRLBTLDNLL3N")
+    #vaciarCanal("2037008", user_API_key)
+    leerCanal("2037008", user_API_key)
+   # while True:
+    #    subirDatos("R5JNSRLBTLDNLL3N")
     #    print(cpu_ram())
-        time.sleep(5)
+     #   time.sleep(5)
