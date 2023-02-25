@@ -156,8 +156,8 @@ if __name__ == "__main__":
         idCanal = canal['id']
         API_key_w = canal['api_keys'][0]['api_key']
         API_key_r = canal['api_keys'][1]['api_key']
-        print(API_key_w)
-        print(API_key_r)
+        print("API de escritura: "+API_key_w)
+        print("API de lectura: "+API_key_r)
         signal.signal(signal.SIGINT, handler)
         while True:
             subirDatos(API_key_w)
