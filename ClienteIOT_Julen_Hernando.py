@@ -12,8 +12,8 @@ import csv
 user_API_key = "5N5KQVAFEADQ22VA"
 nombreCanal = "Mi Canal"
 idCanal = ""
-API_key = "HPNS4GGMJOR7EFCR"
-datosCanal = {}
+API_key_w = "R5JNSRLBTLDNLL3N"
+API_key_r = "HPNS4GGMJOR7EFCR"
 #Lectura de CPU y RAM
 def cpu_ram():
     return psutil.cpu_percent(), psutil.virtual_memory().percent
@@ -21,6 +21,7 @@ def cpu_ram():
 #subprograma handler
 def handler(sig_num, frame):
     print('\nSignal handler called with signal ' + str(sig_num))
+    leerCanal(idCanal, API_key_r)
     print('\nExiting gracefully')
     sys.exit()
 #subprograma request reutilizable
@@ -71,7 +72,7 @@ def comprobarCanales():
     uri = "https://api.thingspeak.com/channels.json"
     cabeceras = {'Host': 'api.thingspeak.com',
                  'Content-Type': 'application/x-www-form-urlencoded'}
-    cuerpo = {'api_keyt': user_API_key}
+    cuerpo = {'api_key': user_API_key}
     codigo, respuesta = miRequest(cabeceras, cuerpo, metodo, uri)
     contenido = respuesta.content
     return json.loads(contenido)
@@ -103,11 +104,18 @@ def guardarDatos(feeds):
         filewriter = csv.DictWriter(csvfile, fieldnames=field_names, delimiter=';')
         #filewriter = csv.writer(csvfile, delimiter = ',', quotechar = '|', quoting = csv.QUOTE_MINIMAL)
         #filewriter.writerow(['Timestamp', 'CPU', 'RAM'])
-        for i in feeds:
-            row = {'timestamp': i['created_at'],
-                   'cpu': i['field1'],
-                   'ram': i['field2']}
-            filewriter.writerow(row)
+        if(len(feeds) < 100):
+            for i in feeds:
+                row = {'timestamp': i['created_at'],
+                       'cpu': i['field1'],
+                       'ram': i['field2']}
+                filewriter.writerow(row)
+        else:
+            for i in range(100):
+                row = {'timestamp': i['created_at'],
+                       'cpu': i['field1'],
+                       'ram': i['field2']}
+                filewriter.writerow(row)
 
 # Vaciar los datos del canal (con user_API_key)
 def vaciarCanal(idCanal, API_key):
@@ -123,11 +131,34 @@ def vaciarCanal(idCanal, API_key):
 
 
 if __name__ == "__main__":
-    #print(crearCanal(user_API_key))
-    #cpu_ram()
-    #vaciarCanal("2037008", user_API_key)
-    leerCanal("2037008", user_API_key)
-   # while True:
-    #    subirDatos("R5JNSRLBTLDNLL3N")
-    #    print(cpu_ram())
-     #   time.sleep(5)
+
+    datosCanal = comprobarCanales()
+    existe = False
+    for i in range(len(datosCanal)):
+        if(datosCanal[i]['name'] == nombreCanal):
+            canal = datosCanal[i]
+            print("Existe canal "+nombreCanal)
+            existe = True
+            break
+
+    if(existe == False):
+        if(len(datosCanal) == 4):
+            print("No se pueden crear mas canales")
+            print("Borra alguno de los canales")
+        else:
+            print("No existe canal "+nombreCanal)
+            canal = crearCanal(user_API_key)
+            existe = True
+
+    if(existe == True):
+        print("Existe Canal")
+        idCanal = canal['id']
+        #nombreCanal = canal['name']
+        API_key_w = canal['api_keys'][0]['api_key']
+        API_key_r = canal['api_keys'][1]['api_key']
+        print(API_key_w)
+        print(API_key_r)
+        signal.signal(signal.SIGINT, handler)
+        while True:
+            subirDatos(API_key_w)
+            time.sleep(5)
