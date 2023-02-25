@@ -22,6 +22,7 @@ def cpu_ram():
 def handler(sig_num, frame):
     print('\nSignal handler called with signal ' + str(sig_num))
     leerCanal(idCanal, API_key_r)
+    vaciarCanal(idCanal, user_API_key)
     print('\nExiting gracefully')
     sys.exit()
 #subprograma request reutilizable
@@ -153,7 +154,6 @@ if __name__ == "__main__":
     if(existe == True):
         print("Existe Canal")
         idCanal = canal['id']
-        #nombreCanal = canal['name']
         API_key_w = canal['api_keys'][0]['api_key']
         API_key_r = canal['api_keys'][1]['api_key']
         print(API_key_w)
@@ -161,4 +161,4 @@ if __name__ == "__main__":
         signal.signal(signal.SIGINT, handler)
         while True:
             subirDatos(API_key_w)
-            time.sleep(5)
+            time.sleep(15)
