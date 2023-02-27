@@ -10,6 +10,7 @@ import time
 import csv
 
 user_API_key = "5N5KQVAFEADQ22VA"
+#datos del canal, todos menos el nombre se actualizaran en el script
 nombreCanal = "Mi Canal"
 idCanal = ""
 API_key_w = "R5JNSRLBTLDNLL3N"
