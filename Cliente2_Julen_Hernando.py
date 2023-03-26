@@ -10,6 +10,7 @@ import getpass
 
 #usuario
 user = sys.argv[1]
+#nombre del usuario (argumento de entrada 1)
 nombreUsuario = sys.argv[2]
 #contraseña
 password = ''
