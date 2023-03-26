@@ -8,7 +8,8 @@ import csv
 from bs4 import BeautifulSoup
 
 #usuario
-user = '775473'
+user = sys.argv[1]
+nombreUsuario = sys.argv[2]
 #contraseña
 password = 'Ragnarok12_a'
 
@@ -139,6 +140,7 @@ if __name__=="__main__":
     cookie = respuesta2.headers['Set-Cookie'].split(';')[0]
 
     #datos obtenidos de la peticion 2
+    print("autenticacion correcta")
     print("datos obtenidos de la peticion 2")
     print("redireccion a: "+location)
     print("cookie de la peticion 2: "+cookie)
