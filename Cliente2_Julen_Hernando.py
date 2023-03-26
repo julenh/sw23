@@ -6,12 +6,13 @@ import urllib
 import sys
 import csv
 from bs4 import BeautifulSoup
+import getpass
 
 #usuario
 user = sys.argv[1]
 nombreUsuario = sys.argv[2]
 #contraseña
-password = 'Ragnarok12_a'
+password = ''
 
 #subprograma request reutilizable
 def post(cabeceras, cuerpo, uri):
@@ -116,6 +117,8 @@ def guardarVSV(enlacesEntregas, cookie):
 
 
 if __name__=="__main__":
+    #se pide la contrasena
+    password = getpass.getpass('Password:')
     #se hace la primera peticion
     codigo, respuesta = peticion1()
     #obtener cookie
@@ -166,18 +169,18 @@ if __name__=="__main__":
         if "Sistemas Web" in str(i):
             redirectSW = i.get('href')
 
-
     #peticion y obtencion de pdf y entregas Sistemas web
+    print("obteniendo pdf y datos de entregas")
     enlacesPDF, enlacesEntregas = obtenerEnlaces(redirectSW, cookie)
 
     #guardar PDF
-    #guardarPDF(enlacesPDF, cookie)
+    print("guardando pdf")
+    guardarPDF(enlacesPDF, cookie)
 
     #csv de entregas
+    print("guardando datos de entregas")
     guardarVSV(enlacesEntregas, cookie)
 
-    print(enlacesPDF)
-    print(enlacesEntregas)
 
 
 
