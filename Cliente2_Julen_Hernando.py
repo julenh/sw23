@@ -141,7 +141,11 @@ if __name__=="__main__":
     #peticion2
     codigo2, respuesta2 = peticion2(redirectPeti1, cookie, logintoken)
     location = respuesta2.headers['Location']
-    cookie = respuesta2.headers['Set-Cookie'].split(';')[0]
+    if  "testsession" in str(location):
+        cookie = respuesta2.headers['Set-Cookie'].split(';')[0]
+    else:
+        print("contraseña incorrecta para ese usuario")
+        sys.exit()
 
     #datos obtenidos de la peticion 2
     print("autenticacion correcta")
@@ -160,6 +164,10 @@ if __name__=="__main__":
     # peticion 4
     codigo, respuesta = peticion4(location,cookie )
     print(codigo)
+    if nombreUsuario in str(respuesta.text):
+        print("entrando en egela de usuario: "+nombreUsuario)
+    else:
+        print("parece que la sesion no corresponde a: "+nombreUsuario)
     #print(respuesta.text)
     print("------------")
 
