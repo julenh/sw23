@@ -137,7 +137,6 @@ if __name__=="__main__":
     print("cookie de la peticion 1: "+cookie)
     print("logintoken: "+logintoken)
 
-
     #peticion2
     codigo2, respuesta2 = peticion2(redirectPeti1, cookie, logintoken)
     location = respuesta2.headers['Location']
